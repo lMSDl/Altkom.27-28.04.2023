@@ -2,6 +2,35 @@ namespace ConsoleApp.Test.xUnit
 {
     public class GardenTest
     {
+        [Theory]
+        //testujemy warnuki brzegowe
+        [InlineData(0)]
+        [InlineData(10)]
+        public void Garden_ValidSize_SizeInit(int size)
+        {
+            // Arrange & Act
+            var garden = new Garden(size);
+
+            // Assert
+            Assert.Equal(size, garden.Size);
+        }
+
+        [Theory]
+        //testujemy warunki brzegowe
+        [InlineData(int.MinValue)]
+        [InlineData(-1)]
+        [InlineData(11)]
+        [InlineData(int.MaxValue)]
+        public void Garden_InvalidSizeSize_ArgumentOutOfRangeException(int size)
+        {
+            // Arrange & Act
+            Action action = () => new Garden(size);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(action);
+            Assert.Equal("size", exception.ParamName);
+        }
+
         [Fact]
         //nazwaMetody_scenariusz_oczekiwanyRezultat
         //public void Plant_PassValidName_ReturnsTrue()
@@ -52,7 +81,28 @@ namespace ConsoleApp.Test.xUnit
              Assert.False(result);
          }*/
 
-        [Fact]
+        [Theory]
+        [InlineData(null)]
+        [InlineData("", "Roœlina musi posiadaæ nazwê!")]
+        [InlineData(" ", "Roœlina musi posiadaæ nazwê!")]
+        [InlineData("\t", "Roœlina musi posiadaæ nazwê!")]
+        public void Plant_InvalidName_ArgumentException(string invalidName, string exprectedMessage = "")
+        {
+            // Arrange
+            const int INSIGNIFICANT_SIZE = 0;
+            var garden = new Garden(INSIGNIFICANT_SIZE);
+
+            // Act
+            Action action = () => garden.Plant(invalidName);
+
+            // Assert
+            var argumentException = Assert.ThrowsAny<ArgumentException>(action); 
+            Assert.Equal("name", argumentException.ParamName);
+            Assert.Contains(exprectedMessage, argumentException.Message);
+
+        }
+
+        [Fact(Skip = "Replaced by Plant_InvalidName_ArgumentException")]
         public void Plant_NullName_ArgumentNullException()
         {
             // Arrange
@@ -65,11 +115,12 @@ namespace ConsoleApp.Test.xUnit
 
             // Assert
             // mo¿emy mieæ wiele assert, jeœli doczytcz¹ tej samej testowanej rzeczy
-            var argumentNullException = Assert.Throws<ArgumentNullException>(action);
+            var argumentNullException = Assert.Throws<ArgumentNullException>(action); //sprawdza rzeczywiœty typ wyj¹tku
+            //var argumentException = Assert.ThrowsAny<ArgumentException>(action); //sprawdza czy wyj¹tek jest hierarchi dziedziczenia
             Assert.Equal("name", argumentNullException.ParamName);
         }
 
-        [Fact]
+        [Fact(Skip = "Replaced by Plant_InvalidName_ArgumentException")]
         public void Plant_WhiteSpaceName_ArgumentException()
         {
             // Arrange

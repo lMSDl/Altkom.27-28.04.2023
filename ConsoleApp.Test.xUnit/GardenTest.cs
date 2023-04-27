@@ -15,7 +15,6 @@ namespace ConsoleApp.Test.xUnit
 
             // Act
             var result = garden.Plant(VALID_NAME);
-            var result2 = garden.Plant(VALID_NAME);
 
             // Assert
             // testujemy tylko jedn¹ rzecz
@@ -87,6 +86,62 @@ namespace ConsoleApp.Test.xUnit
             var argumentException = Assert.IsType<ArgumentException>(exception);
             Assert.Equal("name", argumentException.ParamName);
             Assert.Contains("Roœlina musi posiadaæ nazwê!", argumentException.Message);
+        }
+
+        [Fact]
+        public void Plant_ValidName_AddedToCollection()
+        //Plant_GivesTrueWhenProvidedValidName - alternatywnie
+        {
+            // Arrange
+            const int MINIMAL_VALID_SIZE = 2; 
+            const string VALID_NAME = "a";
+            const int EXPECTED_RESULT_COUNT = 1;
+            var garden = new Garden(MINIMAL_VALID_SIZE);
+
+
+            // Act
+            garden.Plant(VALID_NAME);
+
+            // Assert
+            var plants = garden.GetPlants();
+            var resultCount = plants.Count();
+            Assert.Equal(EXPECTED_RESULT_COUNT, resultCount);
+            Assert.Contains(VALID_NAME, plants);
+        }
+
+        [Fact]
+        public void Plant_ExistingName_ChangedNameOnCollection()
+        //Plant_GivesTrueWhenProvidedValidName - alternatywnie
+        {
+            // Arrange
+            const int MINIMAL_VALID_SIZE = 2;
+            const string VALID_NAME = "a";
+            const string POST_NAME = VALID_NAME + "2";
+            var garden = new Garden(MINIMAL_VALID_SIZE);
+            garden.Plant(VALID_NAME);
+
+            // Act
+            garden.Plant(VALID_NAME);
+
+            // Assert
+            Assert.Contains(POST_NAME, garden.GetPlants());
+        }
+
+        [Fact]
+        public void GetPlants_CopyOfPlantsCollection()
+        {
+            // Arrange
+            const int INSIGNIFICANT_SIZE = 0;
+            var garden = new Garden(INSIGNIFICANT_SIZE);
+
+            // Act
+            var result1 = garden.GetPlants();
+            var result2 = garden.GetPlants();
+
+            // Assert
+            //NotSame/Same - sprawdza instancjê
+            //NotEqual/Equal - sprawdza zawartoœæ listy
+            Assert.NotSame(result1, result2);
         }
     }
 }

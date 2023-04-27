@@ -109,7 +109,7 @@ public class GardenTest : IDisposable
         public void Plant_InvalidName_ArgumentException(string invalidName, string exprectedMessage = "")
         {
             // Arrange
-            Garden garden = GetGardenWIhtInsignificantSize();
+            Garden garden = GetGardenWithInsignificantSize();
 
             // Act
             Action action = () => garden.Plant(invalidName);
@@ -125,7 +125,7 @@ public class GardenTest : IDisposable
         public void Plant_NullName_ArgumentNullException()
         {
             // Arrange
-            Garden garden = GetGardenWIhtInsignificantSize();
+            Garden garden = GetGardenWithInsignificantSize();
             string? NULL_NAME = null;
 
             // Act
@@ -142,7 +142,7 @@ public class GardenTest : IDisposable
         public void Plant_WhiteSpaceName_ArgumentException()
         {
             // Arrange
-            Garden garden = GetGardenWIhtInsignificantSize();
+            Garden garden = GetGardenWithInsignificantSize();
             string? WHITE_SPACE_NAME = " ";
 
             // Act
@@ -199,7 +199,7 @@ public class GardenTest : IDisposable
         public void GetPlants_CopyOfPlantsCollection()
         {
             // Arrange
-            Garden garden = GetGardenWIhtInsignificantSize();
+            Garden garden = GetGardenWithInsignificantSize();
 
             // Act
             var result1 = garden.GetPlants();

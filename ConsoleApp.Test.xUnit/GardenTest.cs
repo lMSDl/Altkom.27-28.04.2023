@@ -1,7 +1,27 @@
 namespace ConsoleApp.Test.xUnit
 {
+    /*#region BAD_PRACTISE
+public class GardenTest : IDisposable
+{
+
+    private Garden Garden { get; set; }
+
+    //odpowiednik Setup w xUnit
+    public GardenTest()
+    {
+        Garden = new Garden(1);
+    }
+
+    //odpowiednik TearDown w xUnit
+    public void Dispose()
+    {
+        Garden = null;
+    } 
+    #endregion*/
+
     public class GardenTest
     {
+
         [Theory]
         //testujemy warnuki brzegowe
         [InlineData(0)]
@@ -35,7 +55,7 @@ namespace ConsoleApp.Test.xUnit
         //nazwaMetody_scenariusz_oczekiwanyRezultat
         //public void Plant_PassValidName_ReturnsTrue()
         public void Plant_ValidName_True()
-		//Plant_GivesTrueWhenProvidedValidName - alternatywnie
+        //Plant_GivesTrueWhenProvidedValidName - alternatywnie
         {
             // Arrange
             const int MINIMAL_VALID_SIZE = 1; //piszemy testy z minimalnym przekazem i opisujemy swoje intencje
@@ -89,14 +109,13 @@ namespace ConsoleApp.Test.xUnit
         public void Plant_InvalidName_ArgumentException(string invalidName, string exprectedMessage = "")
         {
             // Arrange
-            const int INSIGNIFICANT_SIZE = 0;
-            var garden = new Garden(INSIGNIFICANT_SIZE);
+            Garden garden = GetGardenWithInsignificantSize();
 
             // Act
             Action action = () => garden.Plant(invalidName);
 
             // Assert
-            var argumentException = Assert.ThrowsAny<ArgumentException>(action); 
+            var argumentException = Assert.ThrowsAny<ArgumentException>(action);
             Assert.Equal("name", argumentException.ParamName);
             Assert.Contains(exprectedMessage, argumentException.Message);
 
@@ -106,8 +125,7 @@ namespace ConsoleApp.Test.xUnit
         public void Plant_NullName_ArgumentNullException()
         {
             // Arrange
-            const int INSIGNIFICANT_SIZE = 0;
-            var garden = new Garden(INSIGNIFICANT_SIZE);
+            Garden garden = GetGardenWithInsignificantSize();
             string? NULL_NAME = null;
 
             // Act
@@ -124,8 +142,7 @@ namespace ConsoleApp.Test.xUnit
         public void Plant_WhiteSpaceName_ArgumentException()
         {
             // Arrange
-            const int INSIGNIFICANT_SIZE = 0;
-            var garden = new Garden(INSIGNIFICANT_SIZE);
+            Garden garden = GetGardenWithInsignificantSize();
             string? WHITE_SPACE_NAME = " ";
 
             // Act
@@ -144,7 +161,7 @@ namespace ConsoleApp.Test.xUnit
         //Plant_GivesTrueWhenProvidedValidName - alternatywnie
         {
             // Arrange
-            const int MINIMAL_VALID_SIZE = 2; 
+            const int MINIMAL_VALID_SIZE = 2;
             const string VALID_NAME = "a";
             const int EXPECTED_RESULT_COUNT = 1;
             var garden = new Garden(MINIMAL_VALID_SIZE);
@@ -182,8 +199,7 @@ namespace ConsoleApp.Test.xUnit
         public void GetPlants_CopyOfPlantsCollection()
         {
             // Arrange
-            const int INSIGNIFICANT_SIZE = 0;
-            var garden = new Garden(INSIGNIFICANT_SIZE);
+            Garden garden = GetGardenWithInsignificantSize();
 
             // Act
             var result1 = garden.GetPlants();
@@ -193,6 +209,13 @@ namespace ConsoleApp.Test.xUnit
             //NotSame/Same - sprawdza instancjê
             //NotEqual/Equal - sprawdza zawartoœæ listy
             Assert.NotSame(result1, result2);
+        }
+
+        private static Garden GetGardenWithInsignificantSize()
+        {
+            const int INSIGNIFICANT_SIZE = 0;
+            var garden = new Garden(INSIGNIFICANT_SIZE);
+            return garden;
         }
     }
 }

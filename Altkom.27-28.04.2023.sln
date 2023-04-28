@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.Test.xUnit", "WebApi.Test.xUnit\WebApi.Test.xUnit.csproj", "{6E0E627A-2DDF-424F-9123-816AE4F95A09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankTransfer", "BankTransfer\BankTransfer.csproj", "{290A9B33-D0F2-423F-98AD-FEE4F68584BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{6E0E627A-2DDF-424F-9123-816AE4F95A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E0E627A-2DDF-424F-9123-816AE4F95A09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E0E627A-2DDF-424F-9123-816AE4F95A09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{290A9B33-D0F2-423F-98AD-FEE4F68584BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{290A9B33-D0F2-423F-98AD-FEE4F68584BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{290A9B33-D0F2-423F-98AD-FEE4F68584BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{290A9B33-D0F2-423F-98AD-FEE4F68584BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

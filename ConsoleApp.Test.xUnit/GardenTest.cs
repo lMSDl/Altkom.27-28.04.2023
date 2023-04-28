@@ -1,3 +1,4 @@
+using AutoFixture;
 using FluentAssertions;
 using Moq;
 
@@ -243,11 +244,12 @@ public class GardenTest : IDisposable
         public void GetPlants_DuplicatedName_MessageLogged()
         {
             //Arrange
+            var fixture = new Fixture();
             const int VALID_SIZE = 2;
             var loggerMock = new Mock<ILogger>();
 
             var garden = new Garden(VALID_SIZE, loggerMock.Object);
-            string plantName = "a";
+            string plantName = fixture.Create<string>();
             garden.Plant(plantName);
 
             //Act
@@ -261,8 +263,9 @@ public class GardenTest : IDisposable
         public void GetLastLogFromLastHour_LastLog()
         {
             //Arrange
-            string log1 = "a";
-            string log2 = "b";
+            var fixture = new Fixture();
+            string log1 = fixture.Create<string>();
+            string log2 = fixture.Create<string>();
             var logger = new Mock<ILogger>();
             logger.Setup(x => x.GetLogsAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                   .ReturnsAsync($"{log1}\n{log2}");

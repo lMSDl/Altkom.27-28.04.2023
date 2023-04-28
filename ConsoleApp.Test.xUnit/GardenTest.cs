@@ -1,3 +1,6 @@
+using FluentAssertions;
+using Moq;
+
 namespace ConsoleApp.Test.xUnit
 {
     /*#region BAD_PRACTISE
@@ -216,6 +219,63 @@ public class GardenTest : IDisposable
             const int INSIGNIFICANT_SIZE = 0;
             var garden = new Garden(INSIGNIFICANT_SIZE);
             return garden;
+        }
+
+        [Fact]
+        public void GetPlants_ValidName_MessageLogged()
+        {
+            //Arrange
+            const int VALID_SIZE = 1;
+            var loggerMock = new Mock<ILogger>();
+            loggerMock.Setup(x => x.Log(It.IsAny<string>())).Verifiable();
+            
+            var garden = new Garden(VALID_SIZE, loggerMock.Object);
+            string plantName = "a";
+
+            //Act
+            garden.Plant(plantName);
+
+            //Assert
+            loggerMock.Verify();
+        }
+
+        [Fact]
+        public void GetPlants_DuplicatedName_MessageLogged()
+        {
+            //Arrange
+            const int VALID_SIZE = 2;
+            var loggerMock = new Mock<ILogger>();
+
+            var garden = new Garden(VALID_SIZE, loggerMock.Object);
+            string plantName = "a";
+            garden.Plant(plantName);
+
+            //Act
+            garden.Plant(plantName);
+
+            //Assert
+            loggerMock.Verify(x => x.Log(It.Is<string>(x => x.Contains(plantName))), Times.Exactly(3));
+        }
+
+        [Fact]
+        public void GetLastLogFromLastHour_LastLog()
+        {
+            //Arrange
+            string log1 = "a";
+            string log2 = "b";
+            var logger = new Mock<ILogger>();
+            logger.Setup(x => x.GetLogsAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                  .ReturnsAsync($"{log1}\n{log2}");
+
+            const int INSIGNIFICANT_SIZE = 0;
+            var garden = new Garden(INSIGNIFICANT_SIZE, logger.Object);
+
+
+            //Act
+            var result = garden.GetLastLogFromLastHour();
+
+            // Assert
+            result.Should().Be(log2);
         }
     }
 }

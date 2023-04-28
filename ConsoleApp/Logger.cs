@@ -23,7 +23,7 @@ namespace ConsoleApp
         {
             return Task.Run(() =>
             {
-                throw new Exception();
+                //throw new Exception();
                 return string.Join("\n", _logs.Where(x => x.Key >= from).Where(x => x.Key <= to).Select(x => $"{x.Key.ToShortDateString()} {x.Key.ToShortTimeString()}: {x.Value}"));
             });
         }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FluentAssertions;
+using FluentAssertions.Execution;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -41,12 +43,36 @@ namespace ConsoleApp.Test.xUnit
 
             //Assert
             var timeStop = DateTime.Now;
-            Assert.Equal(log, eventSender);
+            /*Assert.Equal(log, eventSender);
             Assert.NotNull(loggerEventArgs);
             Assert.Equal(ANY_MESSAGE, loggerEventArgs!.Message);
-            Assert.InRange(loggerEventArgs.DateTime, timeStart, timeStop);
+            Assert.InRange(loggerEventArgs.DateTime, timeStart, timeStop);*/
 
+            using (new AssertionScope())
+            {
+                eventSender.Should().Be(log);
+                loggerEventArgs.Message.Should().Be(ANY_MESSAGE);
+                loggerEventArgs.DateTime.Should().BeAfter(timeStart).And.BeBefore(timeStop);
+            }
         }
+
+        [Fact]
+        public void Log_AnyMessage_ValidEventInvoked_FA()
+        {
+            //Arrage
+            var log = new Logger();
+            const string ANY_MESSAGE = "a";
+            using var monitor = log.Monitor();
+
+            //Act
+            log.Log(ANY_MESSAGE);
+
+            //Assert
+            monitor.Should().Raise(nameof(Logger.MessageLogged))
+                .WithSender(log)
+                .WithArgs<Logger.LoggerEventArgs>();
+        }
+
 
         [Fact]
         public void GetLogAsync_DateRange_LoggedMessageAsync()
@@ -69,9 +95,17 @@ namespace ConsoleApp.Test.xUnit
             catch { }
 
             //Assert
-            Assert.True(task.IsCompletedSuccessfully);
+            /*Assert.True(task.IsCompletedSuccessfully);
             Assert.Contains(ANY_MESSAGE, result);
-            Assert.True(DateTime.TryParseExact(result.Split(": ")[0], "dd.MM.yyyy hh:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _));
+            Assert.True(DateTime.TryParseExact(result.Split(": ")[0], "dd.MM.yyyy hh:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _));*/
+
+            using (new AssertionScope())
+            {
+                task.IsCompletedSuccessfully.Should().BeTrue();
+                result.Should().Contain(ANY_MESSAGE);
+                DateTime.TryParseExact(result.Split(": ")[0], "dd.MM.yyyy hh:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _).Should().BeTrue();
+            }
         }
+
     }
 }
